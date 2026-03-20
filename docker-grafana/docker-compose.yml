@@ -1,0 +1,53 @@
+## need to change network mode
+
+services:
+  ### PROMETHEUS
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  ### GRAFANA
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  ### INFLUXDB
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb-storage:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpassword
+      - DOCKER_INFLUXDB_INIT_ORG=anytry
+      - DOCKER_INFLUXDB_INIT_BUCKET=main_bucket
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token-xyz
+    restart: unless-stopped
+
+  mqtt-influx-bridge:
+    build: ./mqtt-influx-bridge
+    container_name: mqtt-influx-bridge
+    network_mode: host 
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+
+volumes:
+  grafana-storage: {}
+  influxdb-storage: {}
