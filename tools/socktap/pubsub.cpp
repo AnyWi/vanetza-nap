@@ -100,16 +100,29 @@ PubSub::PubSub(config_t config_, int num_threads_, std::mutex& prom_mtx_) :
     std::string listen_json;
     if (config.zenoh_local_only) {
         listen_json = "[\"tcp/127.0.0.1:7447#iface=lo\"]";
-        // std::cout << "Binding Zenoh router to loopback only." << std::endl;
+        std::cout << "Binding Zenoh router to loopback only." << std::endl;
     } else {
         listen_json = "[\"tcp/0.0.0.0:7447\"]";
-        // std::cout << "Binding Zenoh router to all interfaces." << std::endl;
+        std::cout << "Binding Zenoh router to all interfaces." << std::endl;
     }
     zconfig.insert_json5("mode", "\"router\"", err);
     zconfig.insert_json5("listen/endpoints", listen_json, err);
 
-    const std::string allowed_interfaces = this->config.zenoh_interfaces.empty() ? this->config.interface : this->config.zenoh_interfaces;
+//
+// EDITED
+//
+    if(this->config.zenoh_interfaces.find('"') != std::string::npos){
+        std::cout << "Zenoh config empty" << '\n';
+    }
+    std::cout << "Zenoh interface" << this->config.zenoh_interfaces << '\n';
+    std::cout << "Config interface" << this->config.interface << endl;
+
+    // const std::string allowed_interfaces = this->config.zenoh_interfaces.empty() ? this->config.interface : this->config.zenoh_interfaces;
+    const std::string allowed_interfaces = this->config.zenoh_interfaces.find('"') != std::string::npos ? this->config.interface : this->config.zenoh_interfaces;
     this->allow_interfaces_(zconfig, allowed_interfaces);
+//
+// END EDITED
+//
 
     if (err) {
         std::cout << "Error in Zenoh configuration: " << static_cast<const void*>(err) << std::endl;
@@ -235,7 +248,10 @@ void PubSub::manual_subscribe(message_config_t message_config, std::string topic
     subscribers[topic] = app;
     subscribers[topic + "_enc"] = app;
     topic_priority_lookup[topic] = app->priority;
-    if(message_config.dds_enabled) this->dds->subscribe(topic);
+    if(message_config.dds_enabled){
+        std::cout << "DEBUG:: Subscriber to " << topic << std::endl;
+        this->dds->subscribe(topic);
+    }
     if(message_config.mqtt_enabled) {
         this->local_mqtt->subscribe(topic);
         if(this->remote_mqtt != NULL) this->remote_mqtt->subscribe(topic);

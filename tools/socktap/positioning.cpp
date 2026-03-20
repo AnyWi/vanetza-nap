@@ -24,6 +24,8 @@ create_position_provider(boost::asio::io_service& io_service, const po::variable
         fix.confidence.semi_major = 1 * units::si::meter; // TODO
         fix.confidence.semi_minor = fix.confidence.semi_major;
         stored->position_fix(fix);
+        std::cout << "DEBUG GPS: LATITUDE" << config_s.latitude << '\n';
+        std::cout <<"DEBUG GPS: LONGITUDE" <<  config_s.longitude << endl;
         positioning = std::move(stored);
     }
 

@@ -376,6 +376,15 @@
   //  ],
 
     /// Configure access control (ACL) rules
+    // Example
+    // "subjects": [
+    //       { "id": "iface-eth0", "interfaces": ["eth0"] },
+    //       { "id": "iface-lo", "interfaces": ["lo"] }
+    //   ],
+    //           "policies": [
+    //       { "id": "policy-eth0", "rules": ["allow-all-on-interface"], "subjects": ["iface-eth0"] },
+    //       { "id": "policy-lo", "rules": ["allow-all-on-interface"], "subjects": ["iface-lo"] }
+    //   ]
   access_control: {
       "enabled": true,
       "default_permission": "deny",

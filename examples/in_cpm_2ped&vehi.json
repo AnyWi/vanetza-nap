@@ -1,0 +1,187 @@
+{
+    "managementContainer": {
+        "referenceTime": 697134239.103,
+        "referencePosition": {
+            "altitude": {
+                "altitudeConfidence": 15,
+                "altitudeValue": 2.9
+            },
+            "latitude": 50.63481,
+            "longitude": -20.660463,
+            "positionConfidenceEllipse": {
+                "semiMajorConfidence": 4095,
+                "semiMajorOrientation": 0,
+                "semiMinorConfidence": 4095
+            }
+        }
+    },
+    "cpmContainers": [
+        {
+            "containerId": 1,
+            "containerData": {
+                "orientationAngle": {
+                    "value": 0,
+                    "confidence": 1
+                }
+            }
+        },
+        {
+            "containerId": 3,
+            "containerData": [
+                {
+                    "sensorId": 1,
+                    "sensorType": 1,
+                    "description": "Long Range Radar",
+                    "perceptionRegionShape": {
+                        "radial": {
+                            "range": 150,
+                            "horizontalOpeningAngleStart": 3601,
+                            "horizontalOpeningAngleEnd": 3601
+                        }
+                    },
+                    "shadowingApplies": true
+                },
+                {
+                    "sensorId": 2,
+                    "sensorType": 3,
+                    "description": "Front Facing Camera",
+                    "perceptionRegionShape": {
+                        "radial": {
+                            "range": 80,
+                            "horizontalOpeningAngleStart": 3601,
+                            "horizontalOpeningAngleEnd": 3601
+                        }
+                    },
+                    "shadowingApplies": true
+                }
+            ]
+        },
+        {
+            "containerId": 5,
+            "containerData": {
+                "numberOfPerceivedObjects": 3,
+                "perceivedObjects": [
+                    {
+                        "objectId": 201,
+                        "sensorIdList": [
+                            1
+                        ],
+                        "measurementDeltaTime": 10,
+                        "position": {
+                            "xCoordinate": {
+                                "value": 15.5,
+                                "confidence": 2
+                            },
+                            "yCoordinate": {
+                                "value": 2.0,
+                                "confidence": 2
+                            }
+                        },
+                        "velocity": {
+                            "cartesianVelocity": {
+                                "xVelocity": {
+                                    "value": 1.2,
+                                    "confidence": 1
+                                },
+                                "yVelocity": {
+                                    "value": 0.1,
+                                    "confidence": 1
+                                }
+                            }
+                        },
+                        "classification": [
+                            {
+                                "objectClass": {
+                                    "vruSubClass": {
+                                        "pedestrian": 1
+                                    }
+                                },
+                                "confidence": 85
+                            }
+                        ],
+                        "description": "Pedestrian - Detected only by Radar"
+                    },
+                    {
+                        "objectId": 202,
+                        "sensorIdList": [
+                            1,
+                            2
+                        ],
+                        "measurementDeltaTime": 10,
+                        "position": {
+                            "xCoordinate": {
+                                "value": 45.0,
+                                "confidence": 1
+                            },
+                            "yCoordinate": {
+                                "value": -3.5,
+                                "confidence": 1
+                            }
+                        },
+                        "velocity": {
+                            "cartesianVelocity": {
+                                "xVelocity": {
+                                    "value": 15.5,
+                                    "confidence": 1
+                                },
+                                "yVelocity": {
+                                    "value": 0.0,
+                                    "confidence": 1
+                                }
+                            }
+                        },
+                        "classification": [
+                            {
+                                "objectClass": {
+                                    "vehicleSubClass": 1
+                                },
+                                "confidence": 98
+                            }
+                        ],
+                        "description": "Passenger Car - Sensor Fusion (Radar + Camera)"
+                    },
+                    {
+                        "objectId": 205,
+                        "sensorIdList": [
+                            1
+                        ],
+                        "measurementDeltaTime": 10,
+                        "position": {
+                            "xCoordinate": {
+                                "value": 3.5,
+                                "confidence": 37
+                            },
+                            "yCoordinate": {
+                                "value": 2.0,
+                                "confidence": 2
+                            }
+                        },
+                        "velocity": {
+                            "cartesianVelocity": {
+                                "xVelocity": {
+                                    "value": 1.2,
+                                    "confidence": 1
+                                },
+                                "yVelocity": {
+                                    "value": 0.1,
+                                    "confidence": 1
+                                }
+                            }
+                        },
+                        "classification": [
+                            {
+                                "objectClass": {
+                                    "vruSubClass": {
+                                        "pedestrian": 1
+                                    }
+                                },
+                                "confidence": 65
+                            }
+                        ],
+                        "description": "Pedestrian - Detected only by Radar"
+                    }
+                ]
+            }
+        }
+    ]
+}

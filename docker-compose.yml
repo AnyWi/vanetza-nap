@@ -2,24 +2,36 @@ services:
     rsu:
         hostname: rsu
         restart: always
-        image: ghcr.io/nap-it/vanetza-nap:latest
+        # image: ghcr.io/nap-it/vanetza-nap:latest
+        image: vanetza-nap:latest
         cap_add:
             - "NET_ADMIN"
         environment:
-            - VANETZA_STATION_ID=1
+            - VANETZA_STATION_ID=21
             - VANETZA_STATION_TYPE=15
             - VANETZA_MAC_ADDRESS=6e:06:e0:03:00:01
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_IGNORE_RSU_MESSAGES=true
+            - VANETZA_ZENOH_LOCAL_ONLY=false
+            - VANETZA_CAM_PERIODICITY=0 # only obu sending cam updates
+        # deploy:
+        #     resources:
+        #         limits:
+        #             cpus: '0.02'
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.10
+        # added fakegps python script
+        volumes:
+            - ./tools/docker_files:/app
 
     obu:
         hostname: obu
         restart: always
-        image: ghcr.io/nap-it/vanetza-nap:latest
+        # image: ghcr.io/nap-it/vanetza-nap:latest
+        image: vanetza-nap:latest
         cap_add:
             - "NET_ADMIN"
         environment:
@@ -29,9 +41,18 @@ services:
             - VANETZA_INTERFACE=br0
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
+            - VANETZA_USE_HARDCODED_GPS=false
+            - VANETZA_ZENOH_LOCAL_ONLY=false
+            - VANETZA_CAM_PERIODICITY=0
+        ports:
+            # imx8mp incoming traffic comming from
+            - "2883:1883"
         networks:
             vanetzalan0:
-                ipv4_address: 192.168.98.20
+                ipv4_address: 192.168.98.20  
+        # added fakegps python script
+        volumes:
+            - ./tools/docker_files:/app
             
 networks:
   vanetzalan0:

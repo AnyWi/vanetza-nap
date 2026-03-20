@@ -25,17 +25,23 @@ public:
     void on_data_available(DataReader* reader) override {
         SampleInfo info;
         if(reader->get_topicdescription()->get_type_name() == "JSONMessage") {
+            std::cout << "DEBUG::" << "new JSON message received on dds sub on topic: " << reader->get_topicdescription()->get_name() << std::endl;
             JSONMessage message;
             if (reader->take_next_sample(&message, &info) == ReturnCode_t::RETCODE_OK) {
+                std::cout << "DEBUG::" << "message OK" << std::endl;
                 if (info.valid_data) {
+                    std::cout << "DEBUG::" << "message valid data, forwarding to dds->onmessage() callback" << std::endl;
                     dds->on_message(reader->get_topicdescription()->get_name(), message.message());
-                    //std::cout << "Message: " << message.message() << " RECEIVED ON TOPIC " << reader->get_topicdescription()->get_name() << std::endl;
+                    std::cout << "Message: " << message.message() << " RECEIVED ON TOPIC " << reader->get_topicdescription()->get_name() << std::endl;
                 }
             }
         } else {
+            std::cout << "DEBUG::" << "new ENCODED message received on dds sub on topic: " << reader->get_topicdescription()->get_name() << std::endl;
             EncodedITSMessage encodedMessage;
             if (reader->take_next_sample(&encodedMessage, &info) == ReturnCode_t::RETCODE_OK) {
+                std::cout << "DEBUG::" << "message OK" << std::endl;
                 if (info.valid_data) {
+                    std::cout << "DEBUG::" << "message valid data, forwarding to dds->onmessage() callback" << std::endl;
                     dds->on_message(reader->get_topicdescription()->get_name(), encodedMessage.message(), (encodedMessage.test().has_value() ? encodedMessage.test().value() : std::string("")));
                 }
             }

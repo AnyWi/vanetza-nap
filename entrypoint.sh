@@ -10,13 +10,13 @@ update_config_field() {
 }
 
 if [ -e "/info.ini" ]; then
-    update_config_field "/info.ini" "general" "id" "/config.ini" "station" "id"
-    update_config_field "/info.ini" "mobility" "stationType" "/config.ini" "station" "type"
-    update_config_field "/info.ini" "mobility" "latitude" "/config.ini" "station" "latitude"
-    update_config_field "/info.ini" "mobility" "longitude" "/config.ini" "station" "longitude"
-    update_config_field "/info.ini" "mobility" "macAddr" "/config.ini" "station" "mac_address"
-    update_config_field "/info.ini" "mobility" "interface" "/config.ini" "general" "interface"
-    update_config_field "/info.ini" "general" "id" "/config.ini" "general" "dds_domain_id"
+    update_config_field "/info.ini" "general" "id" "/app/config.ini" "station" "id"
+    update_config_field "/info.ini" "mobility" "stationType" "/app/config.ini" "station" "type"
+    update_config_field "/info.ini" "mobility" "latitude" "/app/config.ini" "station" "latitude"
+    update_config_field "/info.ini" "mobility" "longitude" "/app/config.ini" "station" "longitude"
+    update_config_field "/info.ini" "mobility" "macAddr" "/app/config.ini" "station" "mac_address"
+    update_config_field "/info.ini" "mobility" "interface" "/app/config.ini" "general" "interface"
+    update_config_field "/info.ini" "general" "id" "/app/config.ini" "general" "dds_domain_id"
     echo "Config update process complete"
 else
     echo "No global board config file found. Skipping config update process"
@@ -46,4 +46,15 @@ if [ -n "$START_EMBEDDED_MOSQUITTO" ] && [ $START_EMBEDDED_MOSQUITTO = true ] ; 
     sleep 2
 fi
 
-/usr/local/bin/socktap -c /config.ini
+echo "Starting fake gps"
+sleep 5
+# fake gps coordinates (Amsterdam to Leiden -- loop)
+python3 /app/fakegps/fake_gps.py /app/fakegps/source.nmea --symlink /dev/ttyGPS --interval 1.0 > /dev/null 2>&1 &
+sleep 3
+gpsd -N -n /dev/ttyGPS &
+sleep 5
+gpspipe -w --count 5
+sleep 5
+
+# cat config.ini
+/usr/local/bin/socktap -c config.ini

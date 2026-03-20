@@ -1,0 +1,133 @@
+{
+    "managementContainer": {
+        "referenceTime": 699148800.102,
+        "referencePosition": {
+            "altitude": {
+                "altitudeConfidence": 15,
+                "altitudeValue": 2.9
+            },
+            "latitude": 50.63481,
+            "longitude": -20.660463,
+            "positionConfidenceEllipse": {
+                "semiMajorConfidence": 4095,
+                "semiMajorOrientation": 0,
+                "semiMinorConfidence": 4095
+            }
+        }
+    },
+    "cpmContainers": [
+        {
+            "containerId": 1,
+            "containerData": {
+                "orientationAngle": {
+                    "value": 0,
+                    "confidence": 1
+                }
+            }
+        },
+        {
+            "containerId": 3,
+            "containerData": [
+                {
+                    "sensorId": 1,
+                    "sensorType": 1,
+                    "description": "Primary Fusion Sensor",
+                    "perceptionRegionShape": {
+                        "radial": {
+                            "range": 150,
+                            "horizontalOpeningAngleStart": 3601,
+                            "horizontalOpeningAngleEnd": 3601
+                        }
+                    },
+                    "shadowingApplies": true
+                }
+            ]
+        },
+        {
+            "containerId": 5,
+            "containerData": {
+                "numberOfPerceivedObjects": 2,
+                "perceivedObjects": [
+                    {
+                        "objectId": 1054,
+                        "sensorIdList": [
+                            1
+                        ],
+                        "measurementDeltaTime": 10,
+                        "position": {
+                            "xCoordinate": {
+                                "value": 12.35,
+                                "confidence": 0.67
+                            },
+                            "yCoordinate": {
+                                "value": -3.22,
+                                "confidence": 0.67
+                            }
+                        },
+                        "velocity": {
+                            "cartesianVelocity": {
+                                "xVelocity": {
+                                    "value": 1.2,
+                                    "confidence": 0
+                                },
+                                "yVelocity": {
+                                    "value": 2.4,
+                                    "confidence": 0
+                                }
+                            }
+                        },
+                        "classification": [
+                            {
+                                "objectClass": {
+                                    "vruSubClass": {
+                                        "pedestrian": 1
+                                    }
+                                },
+                                "confidence": 0.85
+                            }
+                        ],
+                        "description": "Pedestrian"
+                    },
+                    {
+                        "objectId": 202,
+                        "sensorIdList": [
+                            1
+                        ],
+                        "measurementDeltaTime": 10,
+                        "position": {
+                            "xCoordinate": {
+                                "value": 45.0,
+                                "confidence": 0.63
+                            },
+                            "yCoordinate": {
+                                "value": -3.5,
+                                "confidence": 0.63
+                            }
+                        },
+                        "velocity": {
+                            "cartesianVelocity": {
+                                "xVelocity": {
+                                    "value": 15.5,
+                                    "confidence": 0
+                                },
+                                "yVelocity": {
+                                    "value": -1.4,
+                                    "confidence": 0
+                                }
+                            }
+                        },
+                        "classification": [
+                            {
+                                "objectClass": {
+                                    "vehicleSubClass": 1
+                                },
+                                "confidence": 0.85
+                            }
+                        ],
+                        "description": "Vehicle"
+                    }
+                ]
+            }
+        }
+    ]
+}

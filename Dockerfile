@@ -118,6 +118,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tcpdump \
     libcurl4-openssl-dev \
     ca-certificates \
+    python3 \
+    gpsd \
+    gpsd-clients \
+    iputils-ping\
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /usr/lib/ocaml \
     && rm -rf /usr/bin/ocam* \

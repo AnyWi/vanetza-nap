@@ -1,0 +1,29 @@
+[
+    {
+        "Object_type": 1,
+        "Object_ID": 1054,
+        "timestamp": 699148800.102,
+        "position": [
+            12.35,
+            -3.22
+        ],
+        "velocity": [
+            1.2,
+            2.4
+        ],
+        "confidence_classification": 0.85,
+        "confidence_presence": 0.67
+    },
+    {
+        "Object_type": 2,
+        "Object_ID": 202,
+        "timestamp": 699148800.120,
+        "position": [
+            45.0,
+            -3.5
+        ],
+        "velocity": [15.5, -1.4],
+        "confidence_classification": 0.85,
+        "confidence_presence": 0.63
+    }
+]
