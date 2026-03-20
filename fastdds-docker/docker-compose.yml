@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  publisher:
+    build: .
+    container_name: vanetza_publisher
+    environment:
+      - ROLE=publisher
+    cap_add:
+      - "NET_ADMIN"
+    command: /app/run.sh publisher
+    networks:
+        vanetzalan0:
+            ipv4_address: 192.168.98.30
+            mac_address: 6e:06:e0:03:00:30
+    volumes:
+      - ./logs:/app/logs
+
+  # subscriber:
+  #   build: .
+  #   container_name: vanetza_subscriber
+  #   environment:
+  #     - ROLE=subscriber
+  #   command: /app/run.sh subscriber
+  #   networks:
+  #       vanetzalan0:
+  #           ipv4_address: 192.168.98.31
+  #           mac_address: 6e:06:e0:03:00:31
+  #   volumes:
+  #     - ./logs:/app/logs
+
+networks:
+  vanetzalan0:
+    external: true
