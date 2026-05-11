@@ -16,6 +16,7 @@ public:
     void request(const vanetza::access::DataRequest&, std::unique_ptr<vanetza::ChunkPacket>) override;
     void indicate(IndicationCallback) override;
     void do_receive();
+    void do_receive_radiotap();
 
 protected:
     std::size_t transmit(std::unique_ptr<vanetza::ChunkPacket>);
@@ -23,6 +24,8 @@ protected:
 
 private:
     void on_read(const boost::system::error_code&, std::size_t);
+    void on_read_radiotap(const boost::system::error_code&, std::size_t);
+
     void pass_up(vanetza::CohesivePacket&&);
 
     static constexpr std::size_t layers_ = num_osi_layers(vanetza::OsiLayer::Physical, vanetza::OsiLayer::Application);

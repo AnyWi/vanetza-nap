@@ -1,7 +1,7 @@
 services:
     rsu:
         hostname: rsu
-        restart: always
+        restart: unless-stopped
         # image: ghcr.io/nap-it/vanetza-nap:latest
         image: vanetza-nap:latest
         cap_add:
@@ -29,7 +29,7 @@ services:
 
     obu:
         hostname: obu
-        restart: always
+        restart: unless-stopped
         # image: ghcr.io/nap-it/vanetza-nap:latest
         image: vanetza-nap:latest
         cap_add:

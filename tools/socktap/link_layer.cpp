@@ -13,7 +13,7 @@ create_link_layer(boost::asio::io_service& io_service, const EthernetDevice& dev
 {
     std::unique_ptr<LinkLayer> link_layer;
 
-    if (name == "ethernet" || name == "cohda") {
+    if (name == "ethernet" || name == "radiotap" || name == "cohda") {
         boost::asio::generic::raw_protocol raw_protocol(AF_PACKET, vanetza::access::ethertype::GeoNetworking.net());
         boost::asio::generic::raw_protocol::socket raw_socket(io_service, raw_protocol);
         raw_socket.bind(device.endpoint(AF_PACKET));
@@ -23,6 +23,13 @@ create_link_layer(boost::asio::io_service& io_service, const EthernetDevice& dev
             link_layer.reset(rawSocketLink);
             std::thread receive_thread = std::thread([rawSocketLink]() {
                 rawSocketLink->do_receive();
+            });
+            receive_thread.detach();
+        } else if (name == "radiotap") {
+            RawSocketLink* rawSocketLink = new RawSocketLink { std::move(raw_socket), device_name, rssi_enabled };
+            link_layer.reset(rawSocketLink);
+            std::thread receive_thread = std::thread([rawSocketLink]() {
+                rawSocketLink->do_receive_radiotap();
             });
             receive_thread.detach();
         } else if (name == "cohda") {

@@ -135,6 +135,7 @@ Document CpmApplication::buildJSON(CollectivePerceptionMessage_t message, double
 
 void CpmApplication::on_message(string topic, string mqtt_message, const std::vector<uint8_t>& bytes, bool is_encoded, double time_reception, string test, vanetza::geonet::Router* router) {
 
+    std::cout << "CPM received" << "\n";
     const double time_processing = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
 
     DownPacketPtr packet { new DownPacket() };

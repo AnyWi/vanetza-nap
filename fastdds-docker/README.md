@@ -28,6 +28,10 @@ vanetza-dds-test/
 
 ---
 
+
+## HOW
+build --> edit run.sh --> launch
+
 ## Option 1: Docker (Recommended, zero setup)
 
 ```bash

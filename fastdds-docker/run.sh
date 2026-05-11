@@ -7,7 +7,7 @@ BUILD_DIR="/app/build"
 case "$ROLE" in
     publisher)
         echo "[run.sh] Starting DDS Publisher..."
-        exec "$BUILD_DIR/dds_publisher" cpm enc 100 # cam|cpm json|enc interval
+        exec "$BUILD_DIR/dds_publisher" cam enc 2000 # cam|cpm json|enc interval
         ;;
     subscriber)
         echo "[run.sh] Starting DDS Subscriber..."

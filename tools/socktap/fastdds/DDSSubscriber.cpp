@@ -37,7 +37,7 @@ bool DDSSubscriber::init(const eprosima::fastrtps::fixed_string<255> &participan
     participantName_ = participantName;
     domain_id_ = domain_id_;
 
-    std::cout << "DEBUG:: dds subscriber with domain" << domain_id << "partecipation_name" << participantName << std::endl;
+    // std::cout << "DEBUG:: dds subscriber with domain" << domain_id << "partecipation_name" << participantName << std::endl;
 
     // Register the Type
     type_->register_type(get_participant(participantName, domain_id), type_name);
