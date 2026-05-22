@@ -16,6 +16,8 @@ services:
             - VANETZA_IGNORE_RSU_MESSAGES=true
             - VANETZA_ZENOH_LOCAL_ONLY=false
             - VANETZA_CAM_PERIODICITY=0 # only obu sending cam updates
+            - VANETZA_LATITUDE=7.59955355857276
+            - VANETZA_LONGITUDE=5.901918236813608
         # deploy:
         #     resources:
         #         limits:
