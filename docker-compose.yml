@@ -3,7 +3,7 @@ services:
         hostname: rsu
         restart: unless-stopped
         # image: ghcr.io/nap-it/vanetza-nap:latest
-        image: vanetza-nap:latest
+        image: vanetza-local:latest
         cap_add:
             - "NET_ADMIN"
         environment:
@@ -16,8 +16,8 @@ services:
             - VANETZA_IGNORE_RSU_MESSAGES=true
             - VANETZA_ZENOH_LOCAL_ONLY=false
             - VANETZA_CAM_PERIODICITY=0 # only obu sending cam updates
-            - VANETZA_LATITUDE=7.59955355857276
-            - VANETZA_LONGITUDE=5.901918236813608
+            - VANETZA_LATITUDE=45.041551
+            - VANETZA_LONGITUDE=7.594615
         # deploy:
         #     resources:
         #         limits:
@@ -33,7 +33,7 @@ services:
         hostname: obu
         restart: unless-stopped
         # image: ghcr.io/nap-it/vanetza-nap:latest
-        image: vanetza-nap:latest
+        image: vanetza-local:latest
         cap_add:
             - "NET_ADMIN"
         environment:

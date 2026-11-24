@@ -27,7 +27,7 @@ type Config struct {
 }
 
 var cfg = Config{
-	MQTTBrokers:  []string{"tcp://192.168.98.10:1883", "tcp://192.168.98.20:1883"},
+	MQTTBrokers:  []string{"tcp://192.168.60.69:1883", "tcp://192.168.40.69:1883"},
 	InfluxURL:    "http://localhost:8086",
 	InfluxToken:  "token-xyz",
 	InfluxOrg:    "anytry",
@@ -96,9 +96,9 @@ func makeMessageHandler(brokerAddr string, writeAPI api.WriteAPIBlocking) mqtt.M
 
 		// Tags
 		tags := map[string]string{
-			"broker":      brokerAddr,
-			"topic":       topic,
-			"msg_type":    msgType,
+			"broker":       brokerAddr,
+			"topic":        topic,
+			"msg_type":     msgType,
 			"station_addr": vmsg.StationAddr,
 		}
 

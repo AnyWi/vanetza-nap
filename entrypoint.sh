@@ -48,8 +48,8 @@ fi
 
 echo "Starting fake gps"
 sleep 5
-# fake gps coordinates (Amsterdam to Leiden -- loop)
-python3 /app/fakegps/fake_gps.py /app/fakegps/source.nmea --symlink /dev/ttyGPS --interval 1.0 > /dev/null 2>&1 &
+# fake gps coordinates (Bylogix -- loop)
+python3 /app/fakegps/fake_gps.py /app/fakegps/bylogix.nmea --update-time --symlink /dev/ttyGPS --interval 1.0 > /dev/null 2>&1 &
 sleep 3
 gpsd -N -n /dev/ttyGPS &
 sleep 5

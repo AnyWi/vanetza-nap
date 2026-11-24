@@ -37,7 +37,11 @@ build --> edit run.sh --> launch
 ```bash
 # Build and start both publisher and subscriber
 docker-compose up --build
-
+log "Adding lib directory to system path"
+# Define the line to add 
+LD_LIB='export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' 
+# Check if the line exists, if not, append it to /root/.bashrc
+grep -qF "$LD_LIB" /root/.bashrc || echo "$LD_LIB" >> /root/.bashrc
 # Or run them separately in 2 terminals:
 docker build -t vanetza-dds .
 
