@@ -56,11 +56,6 @@ VamApplication::VamApplication(PositionProvider& positioning, Runtime& rt, PubSu
         // pubsub->manual_provision(config_s.vam, config_s.full_vam_topic_time);
     }
 
-    if(config_s.vam.zenoh_enabled) {
-        pubsub->declare_zenoh_publisher(config_s.vam, config_s.vam.topic_out);
-        pubsub->declare_zenoh_publisher(config_s.vam, config_s.vam.topic_time);
-    }
-
     if(config_s.vam.udp_out_port != 0) {
         vam_udp_socket.open(ip::udp::v4());
         vam_remote_endpoint = ip::udp::endpoint(ip::address::from_string(config_s.vam.udp_out_addr), config_s.vam.udp_out_port);
@@ -133,11 +128,6 @@ void VamApplication::indicate(const DataIndication& indication, UpPacketPtr pack
     const double time_simple_dds = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
     if(config_s.vam.mqtt_enabled) pubsub->local_mqtt->publish(config_s.vam.topic_out, simpleJSON);
     
-    const double time_full_zenoh = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
-    if(config_s.vam.zenoh_enabled) {
-        pubsub->zenoh_put_shm(config_s.vam.topic_out, simpleJSON, strlen(simpleJSON));
-    }
-
     const double time_simple_local = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
     if(config_s.vam.mqtt_enabled && pubsub->remote_mqtt != NULL) pubsub->remote_mqtt->publish(config_s.remote_mqtt_prefix + std::to_string(config_s.station_id) + "/" + config_s.vam.topic_out, simpleJSON);
     const double time_simple_remote = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
@@ -171,7 +161,6 @@ void VamApplication::indicate(const DataIndication& indication, UpPacketPtr pack
         if (config_s.publish_encoded_payloads != 0) vam_json["test"].AddMember("encoded_timestamp", time_encoded, allocator);
         if (config_s.vam.udp_out_port != 0) vam_json["test"].AddMember("full_udp_timestamp", time_simple_udp, allocator);
         if (config_s.vam.dds_enabled != 0) vam_json["test"].AddMember("full_dds_timestamp", time_simple_dds, allocator);
-        if (config_s.vam.zenoh_enabled != 0) vam_json["test"].AddMember("full_zenoh_timestamp", time_full_zenoh, allocator);
         if (config_s.vam.mqtt_enabled != 0) vam_json["test"].AddMember("full_local_timestamp", time_simple_local, allocator);
         if (config_s.vam.mqtt_enabled && pubsub->remote_mqtt != NULL) vam_json["test"].AddMember("full_remote_timestamp", time_simple_remote, allocator);
         /*

@@ -14,10 +14,9 @@ services:
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
             - VANETZA_IGNORE_RSU_MESSAGES=true
-            - VANETZA_ZENOH_LOCAL_ONLY=false
             - VANETZA_CAM_PERIODICITY=0 # only obu sending cam updates
-            - VANETZA_LATITUDE=45.041551
-            - VANETZA_LONGITUDE=7.594615
+            - VANETZA_LATITUDE=61.4493965693346
+            - VANETZA_LONGITUDE=23.857510895788693
         # deploy:
         #     resources:
         #         limits:
@@ -44,11 +43,11 @@ services:
             - START_EMBEDDED_MOSQUITTO=true
             - SUPPORT_MAC_BLOCKING=true
             - VANETZA_USE_HARDCODED_GPS=false
-            - VANETZA_ZENOH_LOCAL_ONLY=false
+            - START_FAKE_GPS_MQTT=true
             - VANETZA_CAM_PERIODICITY=0
-        ports:
+        #ports:
             # imx8mp incoming traffic comming from
-            - "2883:1883"
+            #- "2883:1883"
         networks:
             vanetzalan0:
                 ipv4_address: 192.168.98.20  

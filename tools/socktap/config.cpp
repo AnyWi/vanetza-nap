@@ -13,8 +13,7 @@ message_config_t read_message_config(INIReader reader, string env_prefix, string
         getenv((env_prefix + "_MQTT_ENABLED").c_str()) == NULL ? reader.GetBoolean(ini_section, "mqtt_enabled", true) : (strcmp(getenv((env_prefix + "_MQTT_ENABLED").c_str()), "true") == 0),
         getenv((env_prefix + "_MQTT_TIME_ENABLED").c_str()) == NULL ? reader.GetBoolean(ini_section, "mqtt_time_enabled", true) : (strcmp(getenv((env_prefix + "_MQTT_TIME_ENABLED").c_str()), "true") == 0),
         getenv((env_prefix + "_MQTT_TEST_ENABLED").c_str()) == NULL ? reader.GetBoolean(ini_section, "mqtt_test_enabled", false) : (strcmp(getenv((env_prefix + "_MQTT_TEST_ENABLED").c_str()), "true") == 0),
-        getenv((env_prefix + "_DDS_ENABLED").c_str()) == NULL ? reader.GetBoolean(ini_section, "dds_enabled", true) : (strcmp(getenv((env_prefix + "_DDS_ENABLED").c_str()), "true") == 0),
-        getenv((env_prefix + "_ZENOH_ENABLED").c_str()) == NULL ? reader.GetBoolean(ini_section, "zenoh_enabled", false) : (strcmp(getenv((env_prefix + "_ZENOH_ENABLED").c_str()), "true") == 0)
+        getenv((env_prefix + "_DDS_ENABLED").c_str()) == NULL ? reader.GetBoolean(ini_section, "dds_enabled", true) : (strcmp(getenv((env_prefix + "_DDS_ENABLED").c_str()), "true") == 0)
     };
     return res;
 }
@@ -62,8 +61,6 @@ void print_ini(INIReader* reader)
     printf("  num_threads             = %ld\n", reader->GetInteger ("general", "num_threads",             -1));
     printf("  publish_encoded_payloads= %s\n",  reader->GetBoolean ("general", "publish_encoded_payloads",false) ? "true" : "false");
     printf("  debug_enabled           = %s\n",  reader->GetBoolean ("general", "debug_enabled",           false) ? "true" : "false");
-    printf("  zenoh_local_only        = %s\n",  reader->GetBoolean ("general", "zenoh_local_only",        true)  ? "true" : "false");
-    printf("  zenoh_interfaces        = %s\n",  reader->Get        ("general", "zenoh_interfaces",        "").c_str());
 
     // ── message sections ───────────────────────────────────────────────────
     // Each message type shares the same set of sub-keys used by
@@ -136,8 +133,6 @@ void print_env()
     printf("  VANETZA_NUM_THREADS             = %s\n", env("VANETZA_NUM_THREADS"));
     printf("  VANETZA_PUBLISH_ENCODED_PAYLOADS= %s\n", env("VANETZA_PUBLISH_ENCODED_PAYLOADS"));
     printf("  VANETZA_DEBUG_ENABLED           = %s\n", env("VANETZA_DEBUG_ENABLED"));
-    printf("  VANETZA_ZENOH_LOCAL_ONLY        = %s\n", env("VANETZA_ZENOH_LOCAL_ONLY"));
-    printf("  VANETZA_ZENOH_INTERFACES        = %s\n", env("VANETZA_ZENOH_INTERFACES"));
 
     // message types
     printf("\n-- message types --\n");
@@ -200,8 +195,6 @@ void read_config(config_t* config_s, string path) {
     config_s->num_threads = getenv("VANETZA_NUM_THREADS") == NULL ? reader.GetInteger("general", "num_threads", -1) : stoi(getenv("VANETZA_NUM_THREADS"));
     config_s->publish_encoded_payloads = getenv("VANETZA_PUBLISH_ENCODED_PAYLOADS") == NULL ? reader.GetBoolean("general", "publish_encoded_payloads", false) : (strcmp((getenv("VANETZA_PUBLISH_ENCODED_PAYLOADS")), "true") == 0);
     config_s->debug_enabled = getenv("VANETZA_DEBUG_ENABLED") == NULL ? reader.GetBoolean("general", "debug_enabled", false) : (strcmp((getenv("VANETZA_DEBUG_ENABLED")), "true") == 0);
-    config_s->zenoh_local_only = getenv("VANETZA_ZENOH_LOCAL_ONLY") == NULL ? reader.GetBoolean("general", "zenoh_local_only", true) : (strcmp((getenv("VANETZA_ZENOH_LOCAL_ONLY")), "true") == 0);
-    config_s->zenoh_interfaces = getenv("VANETZA_ZENOH_INTERFACES") == NULL ? reader.Get("general", "zenoh_interfaces", "") : getenv("VANETZA_ZENOH_INTERFACES");
     config_s->cam = read_message_config(reader, "VANETZA_CAM", "cam");
     config_s->denm = read_message_config(reader, "VANETZA_DENM", "denm");
     config_s->cpm = read_message_config(reader, "VANETZA_CPM", "cpm");

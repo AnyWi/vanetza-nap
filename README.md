@@ -32,10 +32,9 @@ If you find this code useful in your research, please consider citing :
   - [Configuration](#configuration)
   - [Variable transformations](#variable-transformations)
   - [Advanced Usage](#advanced-usage)
-    - [Measuring processing performance & MQTT/DDS/Zenoh latency](#measuring-processing-performance--mqttddszenoh-latency)
+    - [Measuring processing performance & MQTT/DDS latency](#measuring-processing-performance--mqttdds-latency)
     - [Simulating situations where stations become out of range from each other](#simulating-situations-where-stations-become-out-of-range-from-each-other)
     - [DDS](#dds)
-    - [Zenoh](#zenoh)
     - [Prometheus Metrics](#prometheus-metrics)
   - [Project's State and Missing Fields](#projects-state-and-missing-fields)
   - [Authors](#authors)
@@ -44,7 +43,7 @@ If you find this code useful in your research, please consider citing :
 
 ## Introduction and Containerized Usage Guide
 
-Vanetza-NAP extends the base Vanetza project to integrate MQTT/DDS/Zenoh and JSON capabilities, as well as additional types of ETSI C-ITS messages.
+Vanetza-NAP extends the base Vanetza project to integrate MQTT/DDS and JSON capabilities, as well as additional types of ETSI C-ITS messages.
 
 The following message types are supported:
 * Cooperative Awareness Messages (CAM)
@@ -67,7 +66,7 @@ The following message types are supported:
 Put simply, NAP-Vanetza's purpose is to manage the encoding, decoding, sending, and receiving of ETSI C-ITS messages, thus abstracting those layers from VANET application developers.
 
 Applications that need to send ETSI C-ITS messages interact with the service by building a JSON representation of the given message and publishing it in a specific MQTT topic, which Vanetza subscribes to.
-Likewise, applications that need to receive incoming messages do so by subscribing to the respective MQTT/DDS/Zenoh topics, that Vanetza publishes JSON to.
+Likewise, applications that need to receive incoming messages do so by subscribing to the respective MQTT/DDS topics, that Vanetza publishes JSON to.
 
 Inside the folder **examples** you can find example JSON representations for some of the supported message types.
 
@@ -302,8 +301,6 @@ The following table summarizes the available configuration options:
 | general.num_threads | VANETZA_NUM_THREADS | Number of threads to use in Vanetza's thread pool for parallel processing of messages | 4 | |
 | general.publish_encoded_payloads | VANETZA_PUBLISH_ENCODED_PAYLOADS | Publish the raw ASN.1 encoded messages to DDS topics, in addition to the JSON representations | false | Only recommended for debugging purposes, as it may introduce significant latency |
 | general.debug_enabled | VANETZA_DEBUG_ENABLED | Enable debug prints in the terminal/logs | false | |
-| general.zenoh_local_only | VANETZA_ZENOH_LOCAL_ONLY | Use Zenoh in same host only mode, without connecting to any remote router or peer | true | Advanced usage only |
-| general.zenoh_interfaces | VANETZA_ZENOH_INTERFACES | Comma-separated list of network interfaces to use for Zenoh communication when not in local-only mode |  | Advanced usage only |
 | station.id | VANETZA_STATION_ID | ETSI Station ID field | 99 | |
 | station.type | VANETZA_STATION_TYPE | ETSI Station Type field | 15 | |
 | station.mac_address | VANETZA_MAC_ADDRESS | Virtual Mac Address used as the source on L2 ethernet headers | interface's address | |
@@ -324,7 +321,6 @@ Each supported type of message (CAM, DENM, CPM, VAM, SPATEM, MAPEM) has its own 
 | cam.enabled | VANETZA_CAM_ENABLED | Enable the CAM module | true | |
 | cam.mqtt_enabled | VANETZA_CAM_MQTT_ENABLED | Enable publishing and subscribing to MQTT topics | true | |
 | cam.dds_enabled | VANETZA_CAM_DDS_ENABLED | Enable publishing and subscribing to DDS topics | true  | Advanced usage only |
-| cam.zenoh_enabled | VANETZA_CAM_ZENOH_ENABLED | Enable publishing and subscribing to Zenoh keys | false | Advanced usage only |
 | cam.mqtt_time_enabled | VANETZA_CAM_MQTT_TIME_ENABLED | Enable publishing to the respective time topic for performance measurement purposes | true | |
 | cam.mqtt_test_enabled | VANETZA_CAM_MQTT_TEST_ENABLED | Enable publishing to the respective MQTT test topic for performance measurement purposes | false | |
 | cam.periodicity | VANETZA_CAM_PERIODICITY | Periodicity with which to send the default CAM, in milliseconds | 1000 | Only available on CAMs, 0 to disable |
@@ -384,7 +380,7 @@ The file **tools/socktap/asn1json.py** contains a `transformation` dictionary th
 
 ## Advanced Usage
 
-### Measuring processing performance & MQTT/DDS/Zenoh latency
+### Measuring processing performance & MQTT/DDS latency
 
 Each JSON payload that is output by Vanetza contains two different timestamps in UNIX time format.
 
@@ -400,15 +396,15 @@ The difference between the "test/json_timestamp" field and the time at which a g
 #### vanetza/own/cam
 
 - "timestamp": The instant at which the internal timer scheduled the transmission of a new self-generated CAM message
-- "test/json_timestamp": The instant at which Vanetza finished preparing the JSON payload in order to send it via MQTT, DDS and/or Zenoh.
+- "test/json_timestamp": The instant at which Vanetza finished preparing the JSON payload in order to send it via MQTT and/or DDS.
 
 The difference between these timestamps represents the total time elapsed while performing the encoding and queueing of the ASN.1 message and the JSON generation pipeline.
 
-The difference between the "test/json_timestamp" field and the time at which a given client receives a message on this topic represents the total latency introduced by MQTT/DDS/Zenoh and the underlying network
+The difference between the "test/json_timestamp" field and the time at which a given client receives a message on this topic represents the total latency introduced by MQTT/DDS and the underlying network
 
 #### vanetza/time/xxx
 
-- "timestamp": The instant at which the JSON payload was received in the "vanetza/in/xxx" MQTT/DDS/Zenoh topic
+- "timestamp": The instant at which the JSON payload was received in the "vanetza/in/xxx" MQTT/DDS topic
 - "test/wave_timestamp": The instant at which Vanetza finished preparing and sending the ASN.1 encoded message through the WAVE interface
 
 The difference between these timestamps represents the total time elapsed while parsing the JSON message and encoding and queueing the ASN.1 message. 
@@ -456,11 +452,6 @@ You may also use NAP's [dds-mqtt-adapter](https://code.nap.av.it.pt/atcll/dds-mq
 This may be useful for:
 * Allowing developers easy access to the exchanged messages, for debugging or monitoring purposes
 * Allowing less critical services to effectively subscribe to a DDS topic via MQTT, if NAP-Vanetza's MQTT functionality is disabled for performance reasons.
-
-### Zenoh
-NAP-Vanetza also supports publishing and subscribing to Zenoh keys. This allows users to leverage Zenoh's unique features such as its efficient data dissemination through peer-to-peer communication and routing. Vanetza's Zenoh implementation supports both shared memory communication for intra-host data exchange and UDP communication for inter-host data exchange, making it a versatile choice for various deployment scenarios.
-
-To use it, simply activate the <message_type>.zenoh_enabled configuration flags. NAP-Vanetza will use the same topic names configured for MQTT. All technologies may be used simultaneously, if required.
 
 ### Prometheus Metrics
 

@@ -1,6 +1,5 @@
 FROM debian:bullseye-slim AS build
 
-ARG CARGO_HOME=/root/.cargo
 
 ENV TZ=Europe/Lisbon
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -29,11 +28,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     file \
     && rm -rf /var/lib/apt/lists/*
-
-# Zenoh dependencies
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
-ENV PATH="${CARGO_HOME}/bin:${PATH}"
-RUN cargo --version
 
 # DDS dependencies
 WORKDIR /tmp

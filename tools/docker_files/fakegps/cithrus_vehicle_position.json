@@ -1,0 +1,36 @@
+
+{
+  "timestamp": "2026-11-24T12:51:14.777907Z",
+  "vehicle": {
+    "currentLocation": {
+      "latitude": 61.4493965693346,
+      "longitude": 23.857510895788693,
+      "altitude": 149.88931265304922
+    },
+    "currentRotation": {
+      "roll": -0.542218685239618,
+      "pitch": -0.39618654705185463,
+      "yaw": 117.6644202137711
+    },
+    "linearVelocity": {
+      "lateral": 2.680124292586976e-10,
+      "longitudinal": 1.4039824142744482e-10,
+      "vertical": -2.2667250169095456e-17
+    },
+    "linearAcceleration": {
+      "lateral": 3.2277877291822055e-9,
+      "longitudinal": 1.691004057141539e-9,
+      "vertical": -2.729928923822053e-16
+    },
+    "angularVelocity": {
+      "roll": 0,
+      "pitch": 0,
+      "yaw": 0
+    },
+    "angularAcceleration": {
+      "roll": 0,
+      "pitch": 0,
+      "yaw": 0
+    }
+  }
+}

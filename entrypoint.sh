@@ -46,15 +46,18 @@ if [ -n "$START_EMBEDDED_MOSQUITTO" ] && [ $START_EMBEDDED_MOSQUITTO = true ] ; 
     sleep 2
 fi
 
-echo "Starting fake gps"
-sleep 5
-# fake gps coordinates (Bylogix -- loop)
-python3 /app/fakegps/fake_gps.py /app/fakegps/bylogix.nmea --update-time --symlink /dev/ttyGPS --interval 1.0 > /dev/null 2>&1 &
-sleep 3
-gpsd -N -n /dev/ttyGPS &
-sleep 5
-gpspipe -w --count 5
-sleep 5
+# fake gps fed by MQTT (vanetza/gnss) -> PTY -> gpsd
+# only when START_FAKE_GPS_MQTT=true (e.g. OBU); RSU uses hardcoded lat/lon
+if [ "$START_FAKE_GPS_MQTT" = "true" ] ; then
+    echo "Starting fake gps (MQTT)"
+    sleep 5
+    python3 /app/fakegps/fake_gps_mqtt.py --verbose --symlink /dev/ttyGPS --interval 1.0 > /dev/null 2>&1 &
+    sleep 3
+    gpsd -N -n /dev/ttyGPS &
+    sleep 5
+    gpspipe -w --count 5
+    sleep 5
+fi
 
 # cat config.ini
 /usr/local/bin/socktap -c config.ini

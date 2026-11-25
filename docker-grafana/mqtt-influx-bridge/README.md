@@ -2,7 +2,7 @@
 Simple bridge to push data from mqtt to InfluxDb
 
 ## Relevant fields
-latency_encode_ms --> from message received on MQTT/DDS/ZENOH (-JSON) to sent on physical interface (-ASN1)
+latency_encode_ms --> from message received on MQTT/DDS (-JSON) to sent on physical interface (-ASN1)
 
 latency_decode_ms --> from message received on physical interface to 
 

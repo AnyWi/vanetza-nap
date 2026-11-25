@@ -1,5 +1,4 @@
 FROM debian:bookworm-slim AS build
-ARG CARGO_HOME=/root/.cargo
 ENV TZ=Europe/Lisbon
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
@@ -26,23 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     file \
     && rm -rf /var/lib/apt/lists/*
-
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
-ENV PATH="${CARGO_HOME}/bin:${PATH}"
-RUN cargo --version
-
-WORKDIR /tmp
-RUN git clone https://github.com/eclipse-zenoh/zenoh-c.git \
-    && cd zenoh-c && git checkout 1.4.0 \
-    && cmake -B build -DZENOHC_BUILD_WITH_UNSTABLE_API=true -DZENOHC_BUILD_WITH_SHARED_MEMORY=true -DCMAKE_INSTALL_PREFIX=/usr/local \
-    && cmake --build build --config Release \
-    && cmake --build build --target install
-
-WORKDIR /tmp
-RUN git clone https://github.com/eclipse-zenoh/zenoh-cpp.git \
-    && cd zenoh-cpp && git checkout 1.4.0 \
-    && cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local -DZENOHCXX_ENABLE_TESTS=OFF -DZENOHCXX_ENABLE_EXAMPLES=OFF -Dzenohc_DIR=/usr/local/lib/cmake/zenohc \
-    && cmake --build build --target install
 
 WORKDIR /tmp
 RUN git clone https://github.com/jupp0r/prometheus-cpp.git
@@ -109,6 +91,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gpsd \
     gpsd-clients \
     iputils-ping \
+    python3-paho-mqtt \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /usr/lib/ocaml \
     && rm -rf /usr/bin/ocam* \
@@ -123,12 +106,10 @@ WORKDIR /
 ENV EMBEDDED_MOSQUITTO_PORT=1883
 COPY --from=build /vanetza/bin/socktap /usr/local/bin/socktap
 COPY --from=build /vanetza/tools/socktap/config.ini /config.ini
-COPY --from=build /vanetza/tools/socktap/zenoh_config.json5 /zenoh_config.json5
 COPY --from=build /vanetza/entrypoint.sh /entrypoint.sh
 COPY --from=build /usr/local/lib/libfast* /usr/local/lib
 COPY --from=build /usr/local/lib/libfoon* /usr/local/lib
 COPY --from=build /tmp/prometheus-cpp/_build/*.deb /deps/
-COPY --from=build /usr/local/lib/libzenoh* /usr/local/lib/
 RUN dpkg -i /deps/*.deb
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

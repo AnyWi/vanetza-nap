@@ -60,12 +60,6 @@ CamApplication::CamApplication(vanetza::PositionProvider& positioning, vanetza::
         pubsub->manual_provision(config_s.cam, config_s.cam.topic_time);
     }
 
-    if(config_s.cam.zenoh_enabled) {
-        pubsub->declare_zenoh_publisher(config_s.cam, config_s.cam.topic_out);
-        pubsub->declare_zenoh_publisher(config_s.cam, config_s.own_cam_topic_out);
-        pubsub->declare_zenoh_publisher(config_s.cam, config_s.cam.topic_time);
-    }
-
     if(config_s.cam.udp_out_port != 0) {
         cam_udp_socket.open(ip::udp::v4());
         cam_remote_endpoint = ip::udp::endpoint(ip::address::from_string(config_s.cam.udp_out_addr), config_s.cam.udp_out_port);
@@ -154,11 +148,6 @@ void CamApplication::indicate(const DataIndication& indication, UpPacketPtr pack
     const double time_full_dds = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
     if(config_s.cam.topic_out != "" && config_s.cam.mqtt_enabled) pubsub->local_mqtt->publish(config_s.cam.topic_out, fullJSON);
     
-    const double time_full_zenoh = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
-    if(config_s.cam.topic_out != "" && config_s.cam.zenoh_enabled) {
-        pubsub->zenoh_put_shm(config_s.cam.topic_out, fullJSON, strlen(fullJSON));
-    }
-
     const double time_full_local = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
     if(config_s.cam.topic_out != "" && config_s.cam.mqtt_enabled && pubsub->remote_mqtt != NULL) pubsub->remote_mqtt->publish(config_s.remote_mqtt_prefix + std::to_string(config_s.station_id) + "/" + config_s.cam.topic_out, fullJSON);
     const double time_full_remote = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
@@ -176,7 +165,6 @@ void CamApplication::indicate(const DataIndication& indication, UpPacketPtr pack
             if (config_s.cam.topic_out != "") {
                 if (config_s.cam.udp_out_port != 0) cam_json_full["test"].AddMember("full_udp_timestamp", time_full_udp, allocator);
                 if (config_s.cam.dds_enabled) cam_json_full["test"].AddMember("full_dds_timestamp", time_full_dds, allocator);
-                if (config_s.cam.zenoh_enabled) cam_json_full["test"].AddMember("full_zenoh_timestamp", time_full_zenoh, allocator);
                 if (config_s.cam.mqtt_enabled) cam_json_full["test"].AddMember("full_local_timestamp", time_full_local, allocator);
                 if (config_s.cam.mqtt_enabled && pubsub->remote_mqtt != NULL) cam_json_full["test"].AddMember("full_remote_timestamp", time_full_remote, allocator);
             }
@@ -440,9 +428,6 @@ void CamApplication::on_message(string topic, string mqtt_message, const std::ve
         pubsub->local_mqtt->publish(config_s.cam.topic_time, simpleJSON);
         if (pubsub->remote_mqtt != NULL) pubsub->remote_mqtt->publish(config_s.remote_mqtt_prefix + std::to_string(config_s.station_id) + "/" + config_s.cam.topic_time, simpleJSON);
         if (config_s.cam.dds_enabled) pubsub->dds->publish(config_s.cam.topic_time, simpleJSON);
-        if (config_s.cam.zenoh_enabled) {
-            pubsub->zenoh_put_shm(config_s.cam.topic_time, simpleJSON, strlen(simpleJSON));
-        }
     }
 
     const double time_now = (double) duration_cast< microseconds >(system_clock::now().time_since_epoch()).count() / 1000000.0;
@@ -578,9 +563,6 @@ void CamApplication::on_timer(Clock::time_point)
 
     if(config_s.cam.topic_out != "") {
         if(config_s.cam.dds_enabled && config_s.own_cam_topic_out != "") pubsub->dds->publish(config_s.own_cam_topic_out, fullJSON);
-        if(config_s.cam.zenoh_enabled && config_s.own_cam_topic_out != "") {
-            pubsub->zenoh_put_shm(config_s.own_cam_topic_out, fullJSON, strlen(fullJSON));
-        }
         if(config_s.cam.mqtt_enabled && config_s.own_cam_topic_out != "") pubsub->local_mqtt->publish(config_s.own_cam_topic_out, fullJSON);
         if(config_s.cam.mqtt_enabled && config_s.own_cam_topic_out != "" && pubsub->remote_mqtt != NULL) pubsub->remote_mqtt->publish(config_s.remote_mqtt_prefix + std::to_string(config_s.station_id) + "/" + config_s.own_cam_topic_out, fullJSON);
     }
